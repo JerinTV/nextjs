@@ -4,6 +4,7 @@ import "@ant-design/v5-patch-for-react-19";
 import {
   AppstoreOutlined,
   ArrowLeftOutlined,
+  CloseOutlined,
   BellOutlined,
   CalendarOutlined,
   CheckOutlined,
@@ -16,6 +17,10 @@ import {
   MenuFoldOutlined,
   MoreOutlined,
   PlusOutlined,
+  RightOutlined,
+  SlidersOutlined,
+  LeftOutlined,
+  DownOutlined,
   ProfileOutlined,
   QuestionCircleOutlined,
   SettingOutlined,
@@ -50,11 +55,30 @@ const requests = [
   ["Notarisation #8", "02", "7 Sept, 11:00 AM", "Link will be active 10 mins before.", "upcoming"],
 ] as const;
 
+const statusFilters = [
+  "completed",
+  "action pending",
+  "meeting available",
+  "partially completed",
+  "rejected",
+  "upcoming",
+] as const;
+
+const filterFields = [
+  ["Payment Status", "Choose Payment Status"],
+  ["Select Subscription", "Choose Subscription"],
+  ["Select Amount", "Choose Subscription"],
+  ["Select Country", "Choose Country"],
+  ["Account Step", "Choose Account Step"],
+  ["User Type", "All"],
+  ["Transaction Through", "Razorpay"],
+] as const;
+
 function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="brandRow">
-        <img className="brandMark" src="/assets/court-click-logo.png" alt="Court Click logo" />
+        <img className="brandMark" src="/assets/court-click-sidebar-logo.svg" alt="Court Click logo" />
         <div className="brand">court click</div>
         <MenuFoldOutlined className="collapseIcon" />
       </div>
@@ -112,10 +136,10 @@ function TopBar({
       </div>
       <div className="topActions">
         <span>
-          <IdcardOutlined /> Instructions
+          <img className="topActionIcon" src="/assets/instructions-icon.png" alt="" aria-hidden="true" /> Instructions
         </span>
         <span>
-          <CustomerServiceOutlined /> Need help?
+          <img className="topActionIcon" src="/assets/need-help-icon.png" alt="" aria-hidden="true" /> Need help?
         </span>
         <span className="bellWrap">
           <BellOutlined className="bell" />
@@ -149,53 +173,174 @@ function Stepper({ screen }: { screen: Screen }) {
   );
 }
 
-function ListScreen({ setScreen }: { setScreen: (screen: Screen) => void }) {
+function StatusPill({ status }: { status: (typeof requests)[number][4] }) {
+  return <span className={`status ${status.replaceAll(" ", "-")}`}>{status === "meeting available" && <i />} {status.toUpperCase()}</span>;
+}
+
+function QuickFilterModal({ onClose }: { onClose: () => void }) {
+  const [selected, setSelected] = useState("partially completed");
+
   return (
-    <main className="content listContent">
-      <div className="filtersRow">
-        <div className="chips">
-          {["All", "Drafts", "Upcoming", "Completed", "Partially Completed", "Failed"].map((chip) => (
-            <button className={chip === "All" ? "chip active" : "chip"} key={chip}>
-              {chip}
+    <div className="dropdownLayer quickDropdownLayer" onClick={onClose}>
+      <section className="quickModal" onClick={(event) => event.stopPropagation()} aria-label="Quick Filter">
+        <button className="modalClose" onClick={onClose} aria-label="Close quick filter">
+          <CloseOutlined />
+        </button>
+        <h2>Quick Filter</h2>
+        <p>Choose Filter</p>
+        <div className="quickOptions">
+          {statusFilters.map((status) => (
+            <label className="quickOption" key={status}>
+              <input type="checkbox" checked={selected === status} onChange={() => setSelected(status)} />
+              <span className="fakeCheck">{selected === status && <CheckOutlined />}</span>
+              <StatusPill status={status} />
+            </label>
+          ))}
+        </div>
+        <div className="modalActions">
+          <button className="outlineAction" onClick={() => setSelected("")}>Reset Filter</button>
+          <button className="solidAction" onClick={onClose}>Apply</button>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function DateModal({ onClose }: { onClose: () => void }) {
+  const cells = Array.from({ length: 35 }, (_, index) => (index < 4 ? "" : String(index - 3)));
+
+  return (
+    <div className="dropdownLayer dateDropdownLayer" onClick={onClose}>
+      <section className="dateModal" onClick={(event) => event.stopPropagation()} aria-label="Choose Date">
+        <button className="modalClose" onClick={onClose} aria-label="Close date filter">
+          <CloseOutlined />
+        </button>
+        <h2>Choose Date</h2>
+        <p>Choose Initiated Date below</p>
+        <div className="monthRow">
+          <strong>October 2020</strong>
+          <span>
+            <LeftOutlined />
+            <RightOutlined />
+          </span>
+        </div>
+        <div className="calendarGrid">
+          {["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"].map((day) => (
+            <b key={day}>{day}</b>
+          ))}
+          {cells.map((day, index) => (
+            <button className={day === "8" ? "selectedDay" : ""} key={`${day}-${index}`} disabled={!day}>
+              {day}
             </button>
           ))}
         </div>
-        <Button className="primaryBtn" icon={<PlusOutlined />} onClick={() => setScreen("upload")}>
-          New Notarise
-        </Button>
-      </div>
-      <div className="table">
-        <div className="tableHead">
-          <span>Request Name</span>
-          <span>Documents</span>
-          <span>Initiated On</span>
-          <span>Slot</span>
-          <span>Status</span>
-          <span />
+        <div className="modalActions">
+          <button className="outlineAction">Reset Filter</button>
+          <button className="solidAction" onClick={onClose}>Apply</button>
         </div>
-        {requests.map(([name, docs, slot, note, status]) => (
-          <div className="tableRow" key={name}>
-            <strong>{name}</strong>
-            <span>{docs}</span>
-            <span className="dateCell">
-              <span className="dateIcon">
-                <CalendarOutlined />
-              </span>
-              25 Aug 2025
-            </span>
-            <span className="slotCell">
-              {slot}
-              {note && <small>{note}</small>}
-            </span>
-            <span className={`status ${status.replaceAll(" ", "-")}`}>{status === "meeting available" && <i />} {status.toUpperCase()}</span>
-            <span className="rowActions">
-              <Button className="viewBtn">{status === "meeting available" ? "Join Meeting" : "View"}</Button>
-              {status !== "meeting available" ? <MoreOutlined /> : <span className="actionSpacer" />}
-            </span>
+      </section>
+    </div>
+  );
+}
+
+function FilterDrawer({ onClose }: { onClose: () => void }) {
+  return (
+    <div className="drawerShade" onClick={onClose}>
+      <aside className="filterDrawer" onClick={(event) => event.stopPropagation()} aria-label="Filter Users">
+        <button className="drawerClose" onClick={onClose} aria-label="Close filter">
+          <CloseOutlined />
+        </button>
+        <h2>Filter Users</h2>
+        <div className="drawerFields">
+          {filterFields.map(([label, value]) => (
+            <label key={label}>
+              <span>{label}</span>
+              <button>
+                {value}
+                <DownOutlined />
+              </button>
+            </label>
+          ))}
+          <strong>Admin Note Filters</strong>
+        </div>
+        <div className="drawerActions">
+          <button className="outlineAction">Reset Filter</button>
+          <button className="solidAction" onClick={onClose}>Apply Filter</button>
+        </div>
+      </aside>
+    </div>
+  );
+}
+
+function ListScreen({ setScreen }: { setScreen: (screen: Screen) => void }) {
+  const [quickOpen, setQuickOpen] = useState(false);
+  const [dateOpen, setDateOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  return (
+    <>
+      <main className="content listContent">
+        <div className="filtersRow">
+          <div className="chips">
+            {["All", "Drafts", "Upcoming", "Completed", "Partially Completed", "Failed"].map((chip) => (
+              <button className={chip === "All" ? "chip active" : "chip"} key={chip}>
+                {chip}
+              </button>
+            ))}
           </div>
-        ))}
-      </div>
-    </main>
+          <div className="filterActions">
+            <button className="iconFilterBtn" onClick={() => setDrawerOpen(true)} aria-label="Open filter drawer">
+              <span className="filterGlyph" aria-hidden="true">
+                <span />
+                <span />
+                <span />
+              </span>
+            </button>
+            <Button className="primaryBtn" icon={<PlusOutlined />} onClick={() => setScreen("upload")}>
+              New Notarise
+            </Button>
+          </div>
+        </div>
+        <div className="table">
+          <div className="tableHead">
+            <span>Request Name</span>
+            <span>Documents</span>
+            <button onClick={() => setDateOpen(true)}>
+              Initiated On <img className="tableHeaderIcon" src="/assets/initiated-filter-icon.svg" alt="" aria-hidden="true" />
+            </button>
+            <span>Slot</span>
+            <button onClick={() => setQuickOpen(true)}>
+              Status <img className="tableHeaderIcon" src="/assets/status-filter-icon.svg" alt="" aria-hidden="true" />
+            </button>
+            <span />
+          </div>
+          {requests.map(([name, docs, slot, note, status]) => (
+            <div className="tableRow" key={name}>
+              <strong>{name}</strong>
+              <span>{docs}</span>
+              <span className="dateCell">
+                <span className="dateIcon">
+                  <CalendarOutlined />
+                </span>
+                25 Aug 2025
+              </span>
+              <span className="slotCell">
+                {slot}
+                {note && <small>{note}</small>}
+              </span>
+              <StatusPill status={status} />
+              <span className="rowActions">
+                <Button className="viewBtn">{status === "meeting available" ? "Join Meeting" : "View"}</Button>
+                {status !== "meeting available" ? <MoreOutlined /> : <span className="actionSpacer" />}
+              </span>
+            </div>
+          ))}
+        </div>
+      </main>
+      {quickOpen && <QuickFilterModal onClose={() => setQuickOpen(false)} />}
+      {dateOpen && <DateModal onClose={() => setDateOpen(false)} />}
+      {drawerOpen && <FilterDrawer onClose={() => setDrawerOpen(false)} />}
+    </>
   );
 }
 

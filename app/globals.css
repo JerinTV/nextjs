@@ -20,6 +20,7 @@ html,
 body {
   height: 100%;
   margin: 0;
+  overflow: hidden;
 }
 
 body {
@@ -35,7 +36,9 @@ button {
 
 .appShell {
   display: flex;
+  height: 111.111vh;
   min-height: 111.111vh;
+  overflow: hidden;
   transform: scale(0.9);
   transform-origin: top left;
   width: 111.111%;
@@ -233,6 +236,7 @@ button {
 .mainPanel {
   flex: 1;
   min-width: 0;
+  overflow: hidden;
 }
 
 .topbar {
@@ -289,6 +293,13 @@ button {
   gap: 8px;
 }
 
+.topActionIcon {
+  display: inline-block;
+  height: 20px;
+  object-fit: contain;
+  width: 20px;
+}
+
 .topActions svg {
   font-size: 21px;
 }
@@ -324,6 +335,64 @@ button {
   display: flex;
   height: 94px;
   justify-content: space-between;
+}
+
+.filterActions {
+  align-items: center;
+  display: flex;
+  gap: 21px;
+}
+
+.iconFilterBtn {
+  align-items: center;
+  background: #fff;
+  border: 1px solid #351226;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  height: 40px;
+  justify-content: center;
+  padding: 0;
+  width: 40px;
+}
+
+.filterGlyph {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 24px;
+}
+
+.filterGlyph span {
+  background: #5b1f3f;
+  border-radius: 999px;
+  display: block;
+  height: 2px;
+  position: relative;
+  width: 24px;
+}
+
+.filterGlyph span::after {
+  background: #5b1f3f;
+  border-radius: 50%;
+  content: "";
+  height: 5px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+}
+
+.filterGlyph span:nth-child(1)::after {
+  left: 4px;
+}
+
+.filterGlyph span:nth-child(2)::after {
+  left: 13px;
+}
+
+.filterGlyph span:nth-child(3)::after {
+  left: 8px;
 }
 
 .chips {
@@ -390,6 +459,27 @@ button {
   padding: 0 41px;
 }
 
+.tableHead button {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  gap: 7px;
+  padding: 0;
+  text-align: left;
+}
+
+.tableHeaderIcon {
+  display: inline-block;
+  height: 18px;
+  object-fit: contain;
+  vertical-align: middle;
+  width: 18px;
+}
+
 .tableRow {
   align-items: center;
   border-bottom: 1px solid #ece9eb;
@@ -441,6 +531,24 @@ button {
   width: max-content;
 }
 
+.quickOption .status {
+  font-size: 16px;
+  min-height: 35px;
+  min-width: 133px;
+  padding: 0 20px;
+}
+
+.quickOption .status.meeting-available {
+  min-width: 183px;
+  padding-left: 15px;
+}
+
+.quickOption .status.meeting-available i {
+  height: 10px;
+  margin-right: 8px;
+  width: 10px;
+}
+
 .status.completed {
   background: #d8f0e5;
   color: #25ad78;
@@ -477,6 +585,307 @@ button {
 .status.upcoming {
   background: #dfe8f1;
   color: #2b84d0;
+}
+
+.dropdownLayer,
+.drawerShade {
+  inset: 0;
+  position: fixed;
+  z-index: 20;
+}
+
+.dropdownLayer {
+  background: transparent;
+  pointer-events: auto;
+}
+
+.quickModal,
+.dateModal {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.25);
+  position: absolute;
+}
+
+.quickModal {
+  min-height: 454px;
+  padding: 28px 27px 28px;
+  right: 232px;
+  top: 247px;
+  width: 412px;
+}
+
+.dateModal {
+  min-height: 492px;
+  padding: 24px 24px 26px;
+  right: 636px;
+  top: 247px;
+  width: 374px;
+}
+
+.quickModal h2,
+.dateModal h2,
+.filterDrawer h2 {
+  color: #171217;
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 1;
+  margin: 0 0 15px;
+}
+
+.quickModal p,
+.dateModal p {
+  color: #8f8b8c;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1;
+  margin: 0;
+}
+
+.quickModal .modalClose,
+.dateModal .modalClose,
+.drawerClose {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: #5e5d5d;
+  cursor: pointer;
+  display: flex;
+  font-size: 25px;
+  height: 36px;
+  justify-content: center;
+  padding: 0;
+  position: absolute;
+  right: 20px;
+  top: 27px;
+  width: 36px;
+}
+
+.quickOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 31px;
+}
+
+.quickOption {
+  align-items: center;
+  display: flex;
+  gap: 19px;
+}
+
+.quickOption input {
+  height: 1px;
+  opacity: 0;
+  position: absolute;
+  width: 1px;
+}
+
+.fakeCheck {
+  align-items: center;
+  border: 2px solid #846887;
+  border-radius: 5px;
+  color: #fff;
+  display: flex;
+  flex: 0 0 auto;
+  font-size: 13px;
+  height: 22px;
+  justify-content: center;
+  width: 22px;
+}
+
+.quickOption input:checked + .fakeCheck {
+  background: #806082;
+  border-color: #806082;
+}
+
+.modalActions,
+.drawerActions {
+  align-items: center;
+  bottom: 26px;
+  display: flex;
+  gap: 9px;
+  justify-content: flex-end;
+  left: 0;
+  padding: 0 25px;
+  position: absolute;
+  right: 0;
+}
+
+.outlineAction,
+.solidAction {
+  border-radius: 28px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 900;
+  height: 46px;
+}
+
+.outlineAction {
+  background: #fff;
+  border: 1.5px solid #7f486a;
+  color: var(--plum);
+  min-width: 119px;
+}
+
+.solidAction {
+  background: var(--plum);
+  border: 0;
+  color: #fff;
+  min-width: 118px;
+}
+
+.monthRow {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin: 30px 0 15px;
+}
+
+.monthRow strong {
+  color: #3a3638;
+  font-size: 21px;
+  font-weight: 900;
+}
+
+.monthRow span {
+  display: flex;
+  gap: 15px;
+  font-size: 17px;
+  font-weight: 900;
+  padding-right: 4px;
+}
+
+.calendarGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  width: 100%;
+}
+
+.calendarGrid b,
+.calendarGrid button {
+  align-items: center;
+  background: #fff;
+  border: 0;
+  color: #6f6f6f;
+  display: flex;
+  font-size: 21px;
+  font-weight: 500;
+  height: 47px;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
+}
+
+.calendarGrid b {
+  color: #3f3f3f;
+  font-weight: 700;
+  height: 31px;
+}
+
+.calendarGrid button:disabled {
+  color: transparent;
+}
+
+.calendarGrid .selectedDay {
+  background: #ff744f;
+  border-radius: 50%;
+  color: #fff;
+  height: 44px;
+  justify-self: center;
+  margin-top: 1px;
+  width: 44px;
+}
+
+.drawerShade {
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.filterDrawer {
+  background: #fff;
+  box-shadow: -20px 0 50px rgba(0, 0, 0, 0.18);
+  min-height: 100vh;
+  padding: 44px 35px 110px;
+  position: relative;
+  width: 516px;
+}
+
+.drawerClose {
+  font-size: 20px;
+  right: 30px;
+  top: 42px;
+}
+
+.filterDrawer h2 {
+  font-size: 25px;
+  margin-bottom: 42px;
+}
+
+.drawerFields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.drawerFields label {
+  display: block;
+}
+
+.drawerFields label > span {
+  color: #8e888d;
+  display: block;
+  font-size: 12px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.drawerFields label > button {
+  align-items: center;
+  background: #f6f6f6;
+  border: 1px solid #e5e1e3;
+  border-radius: 8px;
+  color: #c0bbbe;
+  display: flex;
+  font-size: 12px;
+  font-weight: 700;
+  height: 46px;
+  justify-content: space-between;
+  padding: 0 16px;
+  text-align: left;
+  width: 100%;
+}
+
+.drawerFields label:nth-of-type(6) > button,
+.drawerFields label:nth-of-type(7) > button {
+  color: #4a4247;
+  font-weight: 900;
+}
+
+.drawerFields strong {
+  color: #1d151a;
+  font-size: 12px;
+  font-weight: 900;
+  margin-top: 2px;
+}
+
+.drawerActions {
+  bottom: 42px;
+  gap: 7px;
+  padding: 0 35px;
+}
+
+.drawerActions .outlineAction {
+  font-size: 12px;
+  height: 36px;
+  min-width: 93px;
+}
+
+.drawerActions .solidAction {
+  font-size: 12px;
+  height: 36px;
+  min-width: 197px;
 }
 
 .rowActions {
