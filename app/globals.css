@@ -1419,11 +1419,24 @@ button {
 }
 
 @media (max-width: 760px) {
+  html,
+  body {
+    height: auto;
+    min-height: 100%;
+    overflow: auto;
+  }
+
   .appShell {
     display: block;
+    height: auto;
     min-height: 100vh;
+    overflow: visible;
     transform: none;
     width: 100%;
+  }
+
+  .mainPanel {
+    overflow: visible;
   }
 
   .sidebar {
